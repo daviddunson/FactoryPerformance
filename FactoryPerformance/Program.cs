@@ -109,12 +109,7 @@ namespace FactoryPerformance
             typeBuilder.DefineMethodOverride(methodBuilder, factoryMethod);
 
             var type = typeBuilder.CreateType();
-
-            if (!(Activator.CreateInstance(type) is IWidgetFactory factory))
-            {
-                throw new InvalidOperationException();
-            }
-
+            var factory = (IWidgetFactory)Activator.CreateInstance(type);
             var stopwatch = Stopwatch.StartNew();
 
             for (int i = 0; i < iterations; i++)
@@ -135,7 +130,6 @@ namespace FactoryPerformance
             il.Emit(OpCodes.Ret);
 
             var factory = (Func<string, Widget>)method.CreateDelegate(typeof(Func<string, Widget>));
-
             var stopwatch = Stopwatch.StartNew();
 
             for (int i = 0; i < iterations; i++)
